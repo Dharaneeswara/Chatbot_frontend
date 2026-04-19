@@ -20,7 +20,7 @@ import type { ChatMessage } from "../../features/chatbot/chatTypes";
 
 const ChatbotPage = () => {
   const dispatch = useAppDispatch();
-  const { messages, loading, sending, searchResults, isSearching } =
+  const { messages, loading, searchResults, isSearching } =
     useAppSelector((state) => state.chat);
   const [isTyping, setIsTyping] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -177,7 +177,6 @@ const ChatbotPage = () => {
 
         {isTyping && <TypingIndicator />}
       </div>
-      {/* <ChatInput onSend={handleSendMessage} isLoading={sending} /> */}
       <ChatInput
         onSend={handleSendMessage}
         isLoading={isBusy}
