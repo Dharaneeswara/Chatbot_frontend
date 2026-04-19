@@ -97,7 +97,8 @@ const ChatInput = ({ onSend, isLoading, onStop }: ChatInputProps) => {
             }}
           />
 
-          <div className="absolute right-2 bottom-2 flex items-center gap-2 bg-white bg-opacity-90 rounded-lg px-1">
+          {/* <div className="absolute right-2 bottom-2 flex items-center gap-2 bg-white bg-opacity-90 rounded-lg px-1"> */}
+          <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2 bg-white bg-opacity-90 rounded-lg px-1">
             {message.length > 0 && (
               <span
                 className={`text-xs px-1 ${

@@ -36,7 +36,7 @@ const Register = () => {
 
   const validation = (): boolean => {
     const newErrors: FormErrors = {};
-    const mailRegex = /^[^\s@]+@(gmail|chatbot)\.(com|in|ai)$/;
+    // const mailRegex = /^[^\s@]+@(gmail|chatbot)\.(com|in|ai)$/;
 
     if (!form.name.trim()) {
       newErrors.name = "Name is required";
@@ -46,8 +46,8 @@ const Register = () => {
 
     if (!form.email.trim()) {
       newErrors.email = "Email is required";
-      // } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-    } else if (!mailRegex.test(form.email)) {
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    // } else if (!mailRegex.test(form.email)) {
       newErrors.email = "Enter valid email";
     }
 

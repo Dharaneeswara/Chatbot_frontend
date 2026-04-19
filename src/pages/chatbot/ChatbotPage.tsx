@@ -26,6 +26,8 @@ const ChatbotPage = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [currentSearchTerm, setCurrentSearchTerm] = useState("");
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isBusy, setIsBusy] = useState(false);
+  const stopStreamRef = useRef(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [initialLoadDone, setInitialLoadDone] = useState(false);
@@ -42,7 +44,14 @@ const ChatbotPage = () => {
   }, [dispatch]);
 
   const handleSendMessage = async (message: string) => {
+    stopStreamRef.current = false;
+    setIsBusy(true);
     setIsTyping(true);
+    setTimeout(() => {
+      if (scrollRef.current) {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      }
+    }, 50);
     const result = await dispatch(sendMessage(message));
     setIsTyping(false);
 
@@ -51,6 +60,7 @@ const ChatbotPage = () => {
       const chars = botMsg.message.split("");
 
       for (let i = 0; i < chars.length; i++) {
+        if (stopStreamRef.current) break;
         await new Promise((resolve) => setTimeout(resolve, 10));
         dispatch(streamBotMessage({ id: botMsg.id, char: chars[i] }));
 
@@ -69,6 +79,13 @@ const ChatbotPage = () => {
         }
       }, 100);
     }
+    setIsBusy(false);
+  };
+
+  const handleStop = () => {
+    stopStreamRef.current = true;
+    setIsTyping(false);
+    setIsBusy(false);
   };
 
   const handleSearch = (query: string) => {
@@ -160,7 +177,12 @@ const ChatbotPage = () => {
 
         {isTyping && <TypingIndicator />}
       </div>
-      <ChatInput onSend={handleSendMessage} isLoading={sending} />
+      {/* <ChatInput onSend={handleSendMessage} isLoading={sending} /> */}
+      <ChatInput
+        onSend={handleSendMessage}
+        isLoading={isBusy}
+        onStop={handleStop}
+      />
 
       {!showSearch && (
         <LoadMoreButton

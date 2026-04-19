@@ -20,6 +20,10 @@ const EditUserModal = ({ isOpen, onClose, user }: EditUserModalProps) => {
   const { roles, loading: rolesLoading } = useAppSelector(
     (state) => state.role,
   );
+
+  const { user: currentUser } = useAppSelector((state) => state.auth);
+  const isCurrentUserAdmin = currentUser?.roles?.includes("admin");
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -196,7 +200,7 @@ const EditUserModal = ({ isOpen, onClose, user }: EditUserModalProps) => {
                   </div>
                 ) : (
                   <div className="space-y-2 border border-gray-300 rounded-lg p-3">
-                    {roles.map((role) => (
+                    {/* {roles.map((role) => (
                       <label
                         key={role.id}
                         className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded"
@@ -212,7 +216,29 @@ const EditUserModal = ({ isOpen, onClose, user }: EditUserModalProps) => {
                             role.roleName.slice(1)}
                         </span>
                       </label>
-                    ))}
+                    ))} */}
+                    {roles
+                      .filter(
+                        (role) =>
+                          role.roleName !== "admin" || isCurrentUserAdmin, // show admin only if current user is admin
+                      )
+                      .map((role) => (
+                        <label
+                          key={role.id}
+                          className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={selectedRoles.includes(role.roleName)}
+                            onChange={() => handleRoleToggle(role.roleName)}
+                            className="w-4 h-4 text-violet-600 border-gray-300 rounded focus:ring-violet-500"
+                          />
+                          <span className="text-sm text-gray-700">
+                            {role.roleName.charAt(0).toUpperCase() +
+                              role.roleName.slice(1)}
+                          </span>
+                        </label>
+                      ))}
                   </div>
                 )}
                 <p className="text-xs text-gray-500 mt-1">

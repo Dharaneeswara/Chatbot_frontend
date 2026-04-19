@@ -60,7 +60,6 @@ export const searchMessages = createAsyncThunk<
   }
 });
 
-
 const initialState: ChatState = {
   messages: [],
   loading: false,
@@ -113,14 +112,29 @@ const chatSlice = createSlice({
         state.error = action.payload || "Failed to load messages";
       })
 
-      .addCase(sendMessage.pending, (state) => {
+      .addCase(sendMessage.pending, (state, action) => {
         state.sending = true;
         state.error = null;
+        state.messages.push({
+          id: Date.now(),
+          message: action.meta.arg,
+          sender: "user",
+          createdAt: new Date().toISOString(),
+          userId: 0,
+        });
       })
       .addCase(sendMessage.fulfilled, (state, action) => {
         state.sending = false;
-        state.messages.push(action.payload.userMessage);
-        state.messages.push({ ...action.payload.botMessage, message: "" }); //for streem bot message for typing effect
+        // state.messages.push(action.payload.userMessage);
+        // state.messages.push({ ...action.payload.botMessage, message: "" }); //for streem bot message for typing effect
+        // state.total += 2;
+        const optimisticIndex = state.messages.findLastIndex(
+          (m) => m.sender === "user",
+        );
+        if (optimisticIndex !== -1) {
+          state.messages[optimisticIndex] = action.payload.userMessage;
+        }
+        state.messages.push({ ...action.payload.botMessage, message: "" });
         state.total += 2;
       })
       .addCase(sendMessage.rejected, (state, action) => {

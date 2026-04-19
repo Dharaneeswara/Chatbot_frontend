@@ -29,12 +29,12 @@ const Login = () => {
 
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
-    const mailRegex = /^[^\s@]+@(gmail|chatbot)\.(com|in|ai)$/;
-
+    // const mailRegex = /^[^\s@]+@(gmail|chatbot)\.(com|in|ai)$/;
+    
     if (!form.email.trim()) {
       newErrors.email = "Email is required";
-      // } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-    } else if (!mailRegex.test(form.email)) {
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    // } else if (!mailRegex.test(form.email)) {
       newErrors.email = "Enter a valid email";
     }
 
